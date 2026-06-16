@@ -1,0 +1,9 @@
+mlx>=0.31.2
+mlx-lm>=0.31.3
+mlx-tune>=0.5.1
+numpy>=2.1.0
+transformers>=5.12.0
+peft>=0.19.1
+datasets>=3.6.0
+pyarrow>=17.0.0
+huggingface_hub>=0.26.0

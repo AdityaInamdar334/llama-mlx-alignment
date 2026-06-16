@@ -1,0 +1,23 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environments
+venv/
+env/
+.env
+
+# Model weights and artifacts
+*_model_mlx/
+*_model_mlx_merged/
+*.gguf
+*.safetensors
+*.bin
+
+# Datasets
+data/
+*.jsonl
+
+# macOS
+.DS_Store
