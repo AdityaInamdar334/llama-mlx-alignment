@@ -1,22 +1,36 @@
-# 🚀 Apple Silicon MLX LLaMA Alignment Pipeline
 
-A complete, end-to-end Supervised Fine-Tuning (SFT) and Direct Preference Optimization (DPO) pipeline built entirely for Apple Silicon Macs using the `mlx` and `mlx-lm` libraries.
 
-This project allows you to take a base LLaMA model and align it using modern reinforcement learning techniques (DPO) locally on your Mac, bypassing the need for expensive NVIDIA GPUs or complex CUDA setups.
+Below is a polished, well‑structured version of your README with badges, clearer headings, and no em dashes. You can replace your current `README.md` with this.
+
+```markdown
+# 🍏 Apple Silicon MLX LLaMA Alignment Pipeline
+
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/)
+[![MLX](https://img.shields.io/badge/MLX-latest-orange)](https://github.com/ml-explore/mlx)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+A complete, end‑to‑end pipeline for Supervised Fine‑Tuning (SFT) and Direct Preference Optimization (DPO) of LLaMA models, designed exclusively for Apple Silicon Macs using the `mlx` and `mlx-lm` libraries.
+
+**Run modern LLM alignment on your Mac – no NVIDIA GPUs, no CUDA.**
 
 ## ✨ Features
-*   **100% Apple Silicon Native**: Fully utilizes the Neural Engine and unified memory via Apple's MLX framework.
-*   **Supervised Fine-Tuning (SFT)**: Teach the base model instruction-following and conversation structures using LoRA adapters.
-*   **Direct Preference Optimization (DPO)**: Align the model's behavior using chosen/rejected pairs without the complexity of traditional RLHF reward models.
-*   **Automatic Weight Fusion**: Seamlessly merge trained LoRA adapters back into the base model for maximum inference speed.
-*   **Interactive Chat CLI**: A built-in terminal chat interface with real-time text streaming and temperature/sampler controls.
+
+- **100% Apple Silicon native** – Leverages the Neural Engine and unified memory via MLX.
+- **Supervised Fine‑Tuning (SFT)** – Teach the model instruction following and conversation structure using LoRA adapters.
+- **Direct Preference Optimization (DPO)** – Align model behavior with chosen/rejected pairs, avoiding the complexity of reward models.
+- **Automatic weight fusion** – Merge LoRA adapters back into the base model for maximum inference speed.
+- **Interactive chat CLI** – Real‑time streaming with adjustable temperature and sampler controls.
+- **Easy deployment** – Export to Hugging Face Hub, run as an OpenAI‑compatible API, or convert to GGUF for Ollama.
 
 ## 📁 Repository Structure
-*   `prepare_dataset.py`: Downloads and formats the Anthropic HH-RLHF dataset into MLX-compatible `.jsonl` files.
-*   `train_sft_mlx.py`: Runs Supervised Fine-Tuning to generate an intermediate instruction-tuned model.
-*   `train_dpo_mlx.py`: Runs Direct Preference Optimization to align the SFT model.
-*   `chat_mlx.py`: A lightweight CLI chat interface to test your final merged model.
-*   `requirements.txt`: Python dependencies optimized for macOS.
+
+| File | Purpose |
+|------|---------|
+| `prepare_dataset.py` | Downloads and formats the Anthropic HH‑RLHF dataset into MLX‑compatible `.jsonl` files. |
+| `train_sft_mlx.py` | Runs Supervised Fine‑Tuning (SFT) to create an instruction‑tuned model. |
+| `train_dpo_mlx.py` | Runs Direct Preference Optimization (DPO) on the SFT model. |
+| `chat_mlx.py` | Lightweight CLI chat interface to test your final merged model. |
+| `requirements.txt` | Python dependencies optimized for macOS. |
 
 ## 🚀 Getting Started
 
@@ -32,46 +46,78 @@ Download and parse the RLHF preference dataset:
 ```bash
 python prepare_dataset.py
 ```
-*This will create a `data/` folder containing `dpo_train.jsonl` and `dpo_val.jsonl`.*
+This creates a `data/` folder containing `dpo_train.jsonl` and `dpo_val.jsonl`.
 
-### 3. Supervised Fine-Tuning (SFT)
-Train the model on the "chosen" responses to teach it how to behave as an assistant:
+### 3. Supervised Fine‑Tuning (SFT)
+Train the model on the "chosen" responses to teach assistant‑like behavior:
 ```bash
 python train_sft_mlx.py
 ```
-*Output: `sft_model_mlx_merged/`*
+*Output:* `sft_model_mlx_merged/`
 
 ### 4. Direct Preference Optimization (DPO)
-Train the model to prefer "chosen" responses over "rejected" ones:
+Train the model to prefer "chosen" over "rejected" responses:
 ```bash
 python train_dpo_mlx.py
 ```
-*Output: `dpo_model_mlx_merged/`*
+*Output:* `dpo_model_mlx_merged/`
 
 ### 5. Chat with Your Model
-Interact with your fully aligned model in the terminal:
 ```bash
 python chat_mlx.py --model_path dpo_model_mlx_merged
 ```
 
----
+## 🌐 Deploy Your Fine‑Tuned Model
 
-## 🌐 How to Host Your Fine-Tuned Model
+Once you have the `dpo_model_mlx_merged` folder, here are three ways to host and share it.
 
-Once you have your `dpo_model_mlx_merged` folder, you have several ways to host and share it:
+### Option 1: Upload to Hugging Face Hub
+```bash
+pip install huggingface_hub
+huggingface-cli login
+huggingface-cli upload your-username/my-awesome-llama-model ./dpo_model_mlx_merged
+```
 
-### Option 1: Share on Hugging Face (Easiest)
-You can upload your model to Hugging Face so anyone in the world can download it.
-1. Create an account on huggingface.co
-2. Run `pip install huggingface_hub` and `huggingface-cli login`
-3. Push your model: `huggingface-cli upload your-username/my-awesome-llama-model ./dpo_model_mlx_merged`
-
-### Option 2: Run as a Local API Endpoint
-The MLX library includes a built-in server that mimics the OpenAI API format! You can start a server directly from your terminal:
+### Option 2: Run as a Local OpenAI‑Compatible API
 ```bash
 python -m mlx_lm.server --model dpo_model_mlx_merged
 ```
-You can now connect standard web apps or tools to `http://localhost:8080/v1/chat/completions`.
+Now connect any OpenAI‑compatible client to `http://localhost:8080/v1/chat/completions`.
 
-### Option 3: Export to Ollama
-If you want to use your model in apps like Chatbox or LM Studio, you can convert it to a `.gguf` file using `llama.cpp` and import it into Ollama. 
+### Option 3: Export to GGUF and Use with Ollama
+Convert the model to `.gguf` using `llama.cpp`, then import it into Ollama for use in apps like Chatbox or LM Studio.
+
+## 📊 Example Results
+
+*[You can add a screenshot or a short table of training loss, reward, or a qualitative comparison between base, SFT, and DPO models here.]*
+
+## 🛠 Requirements
+
+- **Hardware:** Apple Silicon Mac (M1, M2, M3, M4) with at least 16GB unified memory (32GB recommended for 7B+ models).
+- **Software:** macOS 13.0+, Python 3.10+, and the packages listed in `requirements.txt`.
+
+## 🤝 Contributing
+
+Pull requests and issues are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+## 📄 License
+
+This project is licensed under the MIT License – see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgements
+
+- [Apple MLX team](https://github.com/ml-explore/mlx) for the excellent framework.
+- [Anthropic](https://www.anthropic.com/) for the HH‑RLHF dataset.
+- The open‑source community for making LLM alignment accessible.
+```
+
+---
+
+## Next Steps
+
+1. **Update your resume** with the project entry above.  
+2. **Replace your current README** with the improved version.  
+3. **Add a screenshot** of the chat CLI or a graph of training loss to the README (optional but impactful).  
+4. **Push the update to GitHub** and consider posting a LinkedIn update about the project.  
+
+Let me know if you also want a **LinkedIn post draft** or a **cover letter snippet** that mentions this new project.
